@@ -3,7 +3,7 @@ plugins {
     checkstyle
 }
 
-group = "ru.mentee.power"
+group = "ru.mpbank.crm"
 version = "1.0-SNAPSHOT"
 
 repositories {
