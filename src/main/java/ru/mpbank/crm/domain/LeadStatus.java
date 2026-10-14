@@ -4,5 +4,7 @@ public enum LeadStatus {
     NEW,
     QUALIFIED,
     CONVERTED,
-    REJECTED
+    REJECTED;
+
+    public static final LeadStatus DEFAULT = NEW;
 }
