@@ -9,7 +9,11 @@
 ## Сборка и запуск
 - `./gradlew build` — собрать проект
 - `./gradlew run` — запустить приложение
+- `./gradlew test` — прогнать тесты
 - `./gradlew check` — тесты + проверка стиля (Checkstyle)
+- `./gradlew checkstyleMain` / `./gradlew checkstyleTest` — Checkstyle только для `main` / `test`
+
+Отчёты: `build/reports/tests/test/index.html` (тесты), `build/reports/checkstyle/main.html` и `test.html` (стиль). Правила Checkstyle — `config/checkstyle/checkstyle.xml`, нарушение валит сборку.
 
 
 ## Структура проекта

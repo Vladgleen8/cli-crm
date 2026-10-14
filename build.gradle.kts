@@ -16,7 +16,13 @@ val lombokVersion = "1.18.48"
 val checkstyleVersion = "14.3.0"
 
 checkstyle {
-    toolVersion = checkstyleVersion   // версия движка — из общего блока версий
+    toolVersion = checkstyleVersion
+    maxErrors = 0
+    maxWarnings = 999
+}
+
+tasks.withType<Checkstyle>().configureEach {
+    group = "verification"
 }
 
 dependencies {
