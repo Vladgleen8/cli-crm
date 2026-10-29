@@ -37,6 +37,14 @@ public class InMemoryCompanyRepository implements CompanyRepository {
     @Override
     public Company save(Company company) {
         storageById.put(company.getId(), company);
+        if (company.getInn() != null) {
+            try {
+                String key = normalizeInn(company.getInn());
+                storageByInn.putIfAbsent(key, company);
+            } catch (Exception exception) {
+                throw new IllegalArgumentException(company.getInn(), exception);
+            }
+        }
         return company;
     }
 
@@ -63,5 +71,11 @@ public class InMemoryCompanyRepository implements CompanyRepository {
         storageById.put(company.getId(), company);
         return company;
 
+    }
+
+    @Override
+    public Optional<Company> findByInn(String inn) {
+        String key = normalizeInn(inn);
+        return Optional.ofNullable(storageByInn.get(key));
     }
 }

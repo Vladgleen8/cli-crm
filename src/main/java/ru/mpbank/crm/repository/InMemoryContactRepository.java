@@ -16,7 +16,8 @@ public class InMemoryContactRepository implements ContactRepository {
     private final Map<String, Contact> byEmail = new HashMap<>();
     private final Map<String, Contact> byPhone = new HashMap<>();
 
-    public Contact saveOrGet(Contact contact) {
+    @Override
+    public Contact save(Contact contact) {
         String emailKey = contact.getEmail() == null
                 ? null
                 : normalizeEmail(contact.getEmail());
@@ -47,33 +48,6 @@ public class InMemoryContactRepository implements ContactRepository {
         return contact;
     }
 
-    public String normalizeEmail(String rawEmail) {
-        return rawEmail.trim().toLowerCase();
-    }
-
-    public String normalizePhoneNumber(String rawPhoneNumber) {
-        String digits = rawPhoneNumber.replaceAll("\\D", "");
-
-        if (digits.length() == 11 && digits.startsWith("8")) {
-            digits = "7" + digits.substring(1);
-        } else if (digits.length() == 10) {
-            digits = "7" + digits;
-        }
-
-        if (digits.length() != 11 || !digits.startsWith("7")) {
-            throw new IllegalArgumentException("Некорректный номер: " + rawPhoneNumber);
-        }
-
-        return "+" + digits;
-    }
-
-
-    @Override
-    public Contact save(Contact entity) {
-        storage.put(entity.getId(), entity);
-        return entity;
-    }
-
     @Override
     public Optional<Contact> findById(UUID uuid) {
         return Optional.ofNullable(storage.get(uuid));
@@ -96,5 +70,37 @@ public class InMemoryContactRepository implements ContactRepository {
         }
         storage.put(contact.getId(), contact);
         return contact;
+    }
+
+    @Override
+    public Optional<Contact> findByEmail(String rawEmail) {
+        String emailKey = normalizeEmail(rawEmail);
+        return Optional.ofNullable(byEmail.get(emailKey));
+    }
+
+    @Override
+    public Optional<Contact> findByPhone(String rawPhone) {
+        String phone = normalizePhoneNumber(rawPhone);
+        return Optional.ofNullable(byPhone.get(phone));
+    }
+
+    public String normalizeEmail(String rawEmail) {
+        return rawEmail.trim().toLowerCase();
+    }
+
+    public String normalizePhoneNumber(String rawPhoneNumber) {
+        String digits = rawPhoneNumber.replaceAll("\\D", "");
+
+        if (digits.length() == 11 && digits.startsWith("8")) {
+            digits = "7" + digits.substring(1);
+        } else if (digits.length() == 10) {
+            digits = "7" + digits;
+        }
+
+        if (digits.length() != 11 || !digits.startsWith("7")) {
+            throw new IllegalArgumentException("Некорректный номер: " + rawPhoneNumber);
+        }
+
+        return "+" + digits;
     }
 }
